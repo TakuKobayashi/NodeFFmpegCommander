@@ -1,6 +1,6 @@
 {
-  "name": "ffmpeg_commander",
-  "version": "0.1.0",
+  "name": "ffmpeg-commander",
+  "version": "0.0.1",
   "description": "This library can build and execute ffmpeg command.",
   "main": "index.js",
   "scripts": {
