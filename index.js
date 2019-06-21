@@ -1,1 +1,1 @@
-module.exports = require('./lib/ffmpeg_commander');
+module.exports = require('./lib/ffmpeg-commander');
