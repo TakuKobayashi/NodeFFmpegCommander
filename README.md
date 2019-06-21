@@ -1,4 +1,19 @@
-# 参考記事
+# NodeFFMpegCommander
+
+## FFMpegのインストール
+
+## インストール
+
+## 基本的な使い方
+
+
+## FFMpegでやりたいことTipsメモ
+
+
+
+
+
+## 参考記事
 ### 動画の上に動画や画像を重ねる
  * [ffmpeg overlay video on another video in specific time](https://superuser.com/questions/1082477/ffmpeg-overlay-video-on-another-video-in-specific-time)
 
