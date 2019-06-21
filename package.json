@@ -2,8 +2,11 @@
   "name": "ffmpeg-commander",
   "version": "0.0.1",
   "description": "This library can build and execute ffmpeg command.",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "format": "prettier --config .prettierrc --write '**/*.{ts,js}'",
+    "docs": "typedoc --out docs/",
     "test": "jest"
   },
   "repository": {
@@ -30,5 +33,13 @@
     "typedoc": "^0.14.2",
     "typescript": "^3.5.1",
     "typings": "^2.1.1"
-  }
+  },
+  "directories": {
+    "lib": "lib"
+  },
+  "files": [
+    "dist"
+  ],
+  "homepage": "https://github.com/TakuKobayashi/NodeFFmpegCommander#readme",
+  "types": "dist/index.d.ts"
 }
