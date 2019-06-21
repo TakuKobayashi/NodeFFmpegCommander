@@ -1,14 +1,14 @@
-export default abstract class CommandBuilder{
+export default abstract class CommandBuilder {
   // When loglevel is set thewarning, below the warning level logs will not be output.
   protected outputCommandOptions: { [s: string]: string };
   protected ffmpegBaseCommandPath: string;
-  protected inputFilePathes: string[]
+  protected inputFilePathes: string[];
 
-  constructor(){
+  constructor() {
     this.outputCommandOptions = {
-      loglevel: "warning"
+      loglevel: 'warning',
     };
-    this.ffmpegBaseCommandPath = "";
+    this.ffmpegBaseCommandPath = '';
     this.inputFilePathes = [];
   }
 

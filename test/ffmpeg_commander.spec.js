@@ -40,4 +40,4 @@ describe('FFmpegCommander', () => {
   it.skip('run', () => {});
   it.skip('runSync', () => {});
   it.skip('clear', () => {});
-})
+});
