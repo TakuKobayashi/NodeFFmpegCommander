@@ -3,29 +3,29 @@ import CommandBuilder from './command-builder';
 export default class FFprobeCommandBuilder extends CommandBuilder {
   constructor() {
     super();
-    this.outputCommandOptions['show_streams'] = '';
-    this.outputCommandOptions['print_format'] = 'json';
+    this.commandGeneraterOptions.outputCommandOptions['show_streams'] = '';
+    this.commandGeneraterOptions.outputCommandOptions['print_format'] = 'json';
   }
 
   baseInput(inputPath): FFprobeCommandBuilder {
-    this.inputFilePathes = [inputPath];
+    this.commandGeneraterOptions.inputFilePathes = [inputPath];
     return this;
   }
 
   build(): string {
-    const commands = [this.ffmpegBaseCommandPath + 'ffprobe'];
+    const commands = [this.commandGeneraterOptions.ffmpegBaseCommandPath + 'ffprobe'];
 
-    for(const inputPath of this.inputFilePathes){
+    for(const inputPath of this.commandGeneraterOptions.inputFilePathes){
       commands.push('-i');
       commands.push(inputPath);
     }
 
-    for(const outputKey of Object.keys(this.outputCommandOptions)){
+    for(const outputKey of Object.keys(this.commandGeneraterOptions.outputCommandOptions)){
       commands.push('-' + outputKey);
-      if(!this.outputCommandOptions[outputKey] || this.outputCommandOptions[outputKey].length <= 0){
+      if(!this.commandGeneraterOptions.outputCommandOptions[outputKey] || this.commandGeneraterOptions.outputCommandOptions[outputKey].length <= 0){
         continue;
       }
-      commands.push(this.outputCommandOptions[outputKey]);
+      commands.push(this.commandGeneraterOptions.outputCommandOptions[outputKey]);
     }
     return commands.join(' ');
   }

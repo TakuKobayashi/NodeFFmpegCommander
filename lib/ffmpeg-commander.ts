@@ -5,7 +5,7 @@ import FfprobeCommandBuilder from './ffprobe-command-builder';
 
 const child_process = require('child_process');
 
-export default class FFMpegCommander {
+export default class FFmpegCommander {
   static getMetaInfo(videoFilePath: string): FFprobOutput {
     const ffprobCommandBuilder = new FfprobeCommandBuilder();
     const result = this.runSync(ffprobCommandBuilder.baseInput(videoFilePath).build());

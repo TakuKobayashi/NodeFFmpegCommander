@@ -1,18 +1,28 @@
+import {CommandGeneraterOptions} from './interfaces/command-generater-options'
+
 export default abstract class CommandBuilder {
-  // When loglevel is set thewarning, below the warning level logs will not be output.
-  protected outputCommandOptions: { [s: string]: string };
-  protected ffmpegBaseCommandPath: string;
-  protected inputFilePathes: string[];
+  protected commandGeneraterOptions: CommandGeneraterOptions;
 
   constructor() {
-    this.outputCommandOptions = {
-      loglevel: 'warning',
-    };
-    this.ffmpegBaseCommandPath = '';
-    this.inputFilePathes = [];
+    this.clear();
   }
 
   abstract build(): string;
 
   abstract baseInput(inputPath: string);
+
+  clear(): void {
+    this.commandGeneraterOptions = {
+      outputCommandOptions: {
+        loglevel: 'warning',
+      },
+      ffmpegBaseCommandPath: "",
+      inputFilePathes: [],
+      outputFilePath: '',
+      inputCommandOptions: {},
+      streamArgCommands: [],
+      mapCommands: [],
+      videoFilters: [],
+    };
+  }
 }
