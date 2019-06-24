@@ -5,17 +5,6 @@ export default class FFmpegCommandBuilder extends CommandBuilder {
     super();
   }
 
-  setFfmpegPath(path): FFmpegCommandBuilder {
-    if (path.length <= 0) {
-      return;
-    } else if (path[path.length - 1] == '/') {
-      this.commandGeneraterOptions.ffmpegBaseCommandPath = path;
-    } else {
-      this.commandGeneraterOptions.ffmpegBaseCommandPath = path + '/';
-    }
-    return this;
-  }
-
   updateInputCommandOptions(options = {}): FFmpegCommandBuilder {
     this.commandGeneraterOptions.inputCommandOptions = {...this.commandGeneraterOptions.inputCommandOptions, ...options};
     return this;
@@ -32,10 +21,10 @@ export default class FFmpegCommandBuilder extends CommandBuilder {
   }
 
   // This command concat the videos
-  concat(concatPath, enableVideo = true, enableAudio = true, options = {}): FFmpegCommandBuilder {
-    var videoFiles = Array.prototype.concat.apply([], [concatPath]);
-    for (var i = 0; i < videoFiles.length; ++i) {
-      this.commandGeneraterOptions.inputFilePathes.push(videoFiles[i]);
+  concat(concatPathes: string | string[], enableVideo = true, enableAudio = true): FFmpegCommandBuilder {
+    const videoFiles: string[] = Array.prototype.concat.apply([], [concatPathes]);
+    for (const videoFile of videoFiles) {
+      this.commandGeneraterOptions.inputFilePathes.push(videoFile);
     }
     var concatFilterComplex = 'concat=n=' + this.commandGeneraterOptions.inputFilePathes.length + ':';
     if (enableVideo) {
@@ -48,7 +37,7 @@ export default class FFmpegCommandBuilder extends CommandBuilder {
     } else {
       concatFilterComplex = concatFilterComplex + 'a=0';
     }
-    this.commandGeneraterOptions.outputCommandOptions['filter_complex'] = '"' + concatFilterComplex + '"';
+    this.commandGeneraterOptions.outputCommandOptions['filter_complex'] = ['"', concatFilterComplex, '"'].join();
     return this;
   }
 
@@ -80,7 +69,7 @@ export default class FFmpegCommandBuilder extends CommandBuilder {
     } else {
       this.commandGeneraterOptions.streamArgCommands.push(overlayOption);
     }
-    this.commandGeneraterOptions.outputCommandOptions['filter_complex'] = '"' + this.commandGeneraterOptions.streamArgCommands.join(';') + '"';
+    this.commandGeneraterOptions.outputCommandOptions['filter_complex'] = ['"', this.commandGeneraterOptions.streamArgCommands.join(';'), '"'].join();
     return this;
   }
 

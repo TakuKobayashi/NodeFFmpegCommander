@@ -7,6 +7,18 @@ export default abstract class CommandBuilder {
     this.clear();
   }
 
+
+  ffmpegRootPath(path: string) {
+    if (path.length <= 0) {
+      return;
+    } else if (path[path.length - 1] == '/') {
+      this.commandGeneraterOptions.ffmpegBaseCommandPath = path;
+    } else {
+      this.commandGeneraterOptions.ffmpegBaseCommandPath = path + '/';
+    }
+    return this;
+  }
+
   abstract build(): string;
 
   baseInput(inputPath: string){
