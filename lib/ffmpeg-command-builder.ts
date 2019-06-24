@@ -37,7 +37,7 @@ export default class FFmpegCommandBuilder extends CommandBuilder {
     } else {
       concatFilterComplex = concatFilterComplex + 'a=0';
     }
-    this.commandGeneraterOptions.outputCommandOptions['filter_complex'] = ['"', concatFilterComplex, '"'].join();
+    this.commandGeneraterOptions.outputCommandOptions['filter_complex'] = ['"', concatFilterComplex, '"'].join('');
     return this;
   }
 
@@ -75,7 +75,7 @@ export default class FFmpegCommandBuilder extends CommandBuilder {
       '"',
       this.commandGeneraterOptions.streamArgCommands.join(';'),
       '"',
-    ].join();
+    ].join('');
     return this;
   }
 
@@ -246,7 +246,7 @@ export default class FFmpegCommandBuilder extends CommandBuilder {
     }
     if (this.commandGeneraterOptions.videoFilters.length > 0) {
       commands.push('-vf');
-      commands.push(['"', this.commandGeneraterOptions.videoFilters.join(','), '"'].join());
+      commands.push(['"', this.commandGeneraterOptions.videoFilters.join(','), '"'].join(''));
     }
     for (var i = 0; i < this.commandGeneraterOptions.mapCommands.length; ++i) {
       commands.push('-map');
