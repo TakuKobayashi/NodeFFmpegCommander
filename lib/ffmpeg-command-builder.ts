@@ -167,8 +167,8 @@ export default class FFmpegCommandBuilder extends CommandBuilder {
   // [Reference] Example of command when transmitting Gif image:ffmpeg -i 500156_loop.gif -movflags faststart -auto-alt-ref 0 -c:v libvpx -b:v 4M -crf 4 -pix_fmt rgba -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" 500156_loop2.webm
   alphaRendering(codec = 'libvpx', pixelFormat = 'rgba'): FFmpegCommandBuilder {
     this.commandGeneraterOptions.outputCommandOptions['auto-alt-ref'] = '0';
-    this.setVideoCodec(codec);
-    this.setPixelFormat(pixelFormat);
+    this.outputVideoCodec(codec);
+    this.outputPixelFormat(pixelFormat);
     return this;
   }
 
@@ -178,16 +178,6 @@ export default class FFmpegCommandBuilder extends CommandBuilder {
     this.commandGeneraterOptions.outputCommandOptions['crf'] = quality;
     return this;
   }
-
-  setVideoCodec(vcodec): FFmpegCommandBuilder {
-    this.commandGeneraterOptions.outputCommandOptions['vcodec'] = vcodec;
-    return this;
-  }
-
-  setPixelFormat = function(pix_fmt): FFmpegCommandBuilder {
-    this.outputCommandOptions['pix_fmt'] = pix_fmt;
-    return this;
-  };
 
   inputStartSeeking(startTime): FFmpegCommandBuilder {
     this.commandGeneraterOptions.inputCommandOptions['ss'] = startTime.toString();
