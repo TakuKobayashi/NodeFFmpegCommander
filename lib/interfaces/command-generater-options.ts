@@ -6,5 +6,5 @@ export interface CommandGeneraterOptions {
   inputCommandOptions: { [s: string]: string };
   streamArgCommands: string[];
   mapCommands: string[];
-  videoFilters: string[];
+  videoFilters: { [s: string]: string };
 }

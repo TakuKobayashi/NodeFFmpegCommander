@@ -5,17 +5,17 @@ export default class FFmpegCommandBuilder extends CommandBuilder {
     super();
   }
 
-  updateInputCommandOptions(options = {}): FFmpegCommandBuilder {
+  updateInputCommandOptions(options: { [s: string]: string }): FFmpegCommandBuilder {
     this.commandGeneraterOptions.inputCommandOptions = { ...this.commandGeneraterOptions.inputCommandOptions, ...options };
     return this;
   }
 
-  updateOutputCommandOptions(options = {}): FFmpegCommandBuilder {
+  updateOutputCommandOptions(options: { [s: string]: string }): FFmpegCommandBuilder {
     this.commandGeneraterOptions.outputCommandOptions = { ...this.commandGeneraterOptions.outputCommandOptions, ...options };
     return this;
   }
 
-  output(outputPath): FFmpegCommandBuilder {
+  output(outputPath: string): FFmpegCommandBuilder {
     this.commandGeneraterOptions.outputFilePath = outputPath;
     return this;
   }
@@ -26,51 +26,40 @@ export default class FFmpegCommandBuilder extends CommandBuilder {
     for (const videoFile of videoFiles) {
       this.commandGeneraterOptions.inputFilePathes.push(videoFile);
     }
-    var concatFilterComplex = 'concat=n=' + this.commandGeneraterOptions.inputFilePathes.length + ':';
+    const concatFilterComplexes = [['concat', 'n', this.commandGeneraterOptions.inputFilePathes.length].join('=')];
     if (enableVideo) {
-      concatFilterComplex = concatFilterComplex + 'v=1:';
+      concatFilterComplexes.push(['v', '1'].join('='));
     } else {
-      concatFilterComplex = concatFilterComplex + 'v=0:';
+      concatFilterComplexes.push(['v', '0'].join('='));
     }
     if (enableAudio) {
-      concatFilterComplex = concatFilterComplex + 'a=1';
+      concatFilterComplexes.push(['a', '1'].join('='));
     } else {
-      concatFilterComplex = concatFilterComplex + 'a=0';
+      concatFilterComplexes.push(['a', '0'].join('='));
     }
-    this.commandGeneraterOptions.outputCommandOptions['filter_complex'] = ['"', concatFilterComplex, '"'].join('');
+    this.commandGeneraterOptions.outputCommandOptions['filter_complex'] = ['"', concatFilterComplexes.join(':'), '"'].join('');
     return this;
   }
 
   // To composite the base movie overlay movies or images.(there are various commands)
   // If do not adjust PTS to the starting point of the movie, it seems to be the wrong starting point when composed the movie.
-  overlay(overlayPath, overlayOption, options = {}): FFmpegCommandBuilder {
+  overlay(overlayPath: string, startTime: string | number, endTime: string | number): FFmpegCommandBuilder {
     this.commandGeneraterOptions.inputFilePathes.push(overlayPath);
-    var insertNumber = this.commandGeneraterOptions.inputFilePathes.length - 1;
-    if (overlayOption instanceof Object) {
-      var tmpPrefix = '[pts' + insertNumber.toString() + ']';
-      var tmpOverlay = '[overlayout' + insertNumber.toString() + ']';
-      var prevOverlay = '[overlayout' + (insertNumber - 1).toString() + ']';
-      if (insertNumber - 1 <= 0) {
-        prevOverlay = '[0:v]';
-      }
-      this.commandGeneraterOptions.streamArgCommands.push(
-        '[' + insertNumber.toString() + ':v]setpts=PTS+' + overlayOption.start.toString() + '/TB' + tmpPrefix,
-      );
-      this.commandGeneraterOptions.streamArgCommands.push(
-        prevOverlay +
-          tmpPrefix +
-          "overlay=enable='between(t," +
-          overlayOption.start.toString() +
-          ',' +
-          overlayOption.end.toString() +
-          ")'" +
-          tmpOverlay,
-      );
-      // 0:a is set to make sound.
-      this.commandGeneraterOptions.mapCommands = [tmpOverlay, '0:a'];
-    } else {
-      this.commandGeneraterOptions.streamArgCommands.push(overlayOption);
+    const insertNumber = this.commandGeneraterOptions.inputFilePathes.length - 1;
+    const tmpPrefix = '[pts' + insertNumber.toString() + ']';
+    const tmpOverlay = '[overlayout' + insertNumber.toString() + ']';
+    let prevOverlay = '[overlayout' + (insertNumber - 1).toString() + ']';
+    if (insertNumber - 1 <= 0) {
+      prevOverlay = '[0:v]';
     }
+    this.commandGeneraterOptions.streamArgCommands.push(
+      '[' + insertNumber.toString() + ':v]setpts=PTS+' + startTime.toString() + '/TB' + tmpPrefix,
+    );
+    this.commandGeneraterOptions.streamArgCommands.push(
+      prevOverlay + tmpPrefix + "overlay=enable='between(t," + startTime.toString() + ',' + endTime.toString() + ")'" + tmpOverlay,
+    );
+    // 0:a is set to make sound.
+    this.commandGeneraterOptions.mapCommands = [tmpOverlay, '0:a'];
     this.commandGeneraterOptions.outputCommandOptions['filter_complex'] = [
       '"',
       this.commandGeneraterOptions.streamArgCommands.join(';'),
@@ -79,83 +68,83 @@ export default class FFmpegCommandBuilder extends CommandBuilder {
     return this;
   }
 
-  inputfps(framePerSecond): FFmpegCommandBuilder {
-    this.commandGeneraterOptions.inputCommandOptions['r'] = framePerSecond;
+  inputfps(framePerSecond: number): FFmpegCommandBuilder {
+    this.commandGeneraterOptions.inputCommandOptions['r'] = framePerSecond.toString();
     return this;
   }
 
-  outputfps(framePerSecond): FFmpegCommandBuilder {
-    this.commandGeneraterOptions.outputCommandOptions['r'] = framePerSecond;
+  outputfps(framePerSecond: number): FFmpegCommandBuilder {
+    this.commandGeneraterOptions.outputCommandOptions['r'] = framePerSecond.toString();
     return this;
   }
 
-  inputBitrate(bitrate): FFmpegCommandBuilder {
-    this.commandGeneraterOptions.inputCommandOptions['b'] = bitrate;
+  inputBitrate(bitrate: number): FFmpegCommandBuilder {
+    this.commandGeneraterOptions.inputCommandOptions['b'] = bitrate.toString();
     return this;
   }
 
-  outputBitrate(bitrate): FFmpegCommandBuilder {
-    this.commandGeneraterOptions.outputCommandOptions['b'] = bitrate;
+  outputBitrate(bitrate: number): FFmpegCommandBuilder {
+    this.commandGeneraterOptions.outputCommandOptions['b'] = bitrate.toString();
     return this;
   }
 
-  inputVideoCodec(vcodec): FFmpegCommandBuilder {
+  inputVideoCodec(vcodec: string): FFmpegCommandBuilder {
     this.commandGeneraterOptions.inputCommandOptions['vcodec'] = vcodec;
     return this;
   }
 
-  outputVideoCodec(vcodec): FFmpegCommandBuilder {
+  outputVideoCodec(vcodec: string): FFmpegCommandBuilder {
     this.commandGeneraterOptions.outputCommandOptions['vcodec'] = vcodec;
     return this;
   }
 
-  inputPixelFormat(pix_fmt): FFmpegCommandBuilder {
+  inputPixelFormat(pix_fmt: string): FFmpegCommandBuilder {
     this.commandGeneraterOptions.inputCommandOptions['pix_fmt'] = pix_fmt;
     return this;
   }
 
-  outputPixelFormat(pix_fmt): FFmpegCommandBuilder {
+  outputPixelFormat(pix_fmt: string): FFmpegCommandBuilder {
     this.commandGeneraterOptions.outputCommandOptions['pix_fmt'] = pix_fmt;
     return this;
   }
 
-  crop(x, y, width, height): FFmpegCommandBuilder {
-    this.commandGeneraterOptions.videoFilters.push('crop=' + [width, height, x, y].join(':'));
+  crop(x: number, y: number, width: number, height: number): FFmpegCommandBuilder {
+    this.commandGeneraterOptions.videoFilters['crop'] = [width, height, x, y].join(':');
     return this;
   }
 
-  cropCommand(cropString): FFmpegCommandBuilder {
-    this.commandGeneraterOptions.videoFilters.push('crop=' + cropString);
+  cropCommand(cropString: string): FFmpegCommandBuilder {
+    this.commandGeneraterOptions.videoFilters['crop'] = cropString;
     return this;
   }
 
-  scale(width, height): FFmpegCommandBuilder {
-    this.commandGeneraterOptions.videoFilters.push('scale=' + [width, height].join(':'));
+  scale(width: number, height: number): FFmpegCommandBuilder {
+    this.commandGeneraterOptions.videoFilters['scale'] = [width, height].join(':');
     return this;
   }
 
-  scaleCommand(scaleString): FFmpegCommandBuilder {
-    this.commandGeneraterOptions.videoFilters.push('scale=' + scaleString);
+  scaleCommand(scaleString: string): FFmpegCommandBuilder {
+    this.commandGeneraterOptions.videoFilters['scale'] = scaleString;
     return this;
   }
 
-  padding(x, y, width, height): FFmpegCommandBuilder {
-    this.commandGeneraterOptions.videoFilters.push('pad=' + [width, height, x, y].join(':'));
+  padding(x: number, y: number, width: number, height: number): FFmpegCommandBuilder {
+    this.commandGeneraterOptions.videoFilters['pad'] = [width, height, x, y].join(':');
     return this;
   }
 
-  paddingCommand(paddingString): FFmpegCommandBuilder {
-    this.commandGeneraterOptions.videoFilters.push('pad=' + paddingString);
+  paddingCommand(paddingString: string): FFmpegCommandBuilder {
+    this.commandGeneraterOptions.videoFilters['pad'] = paddingString;
     return this;
   }
 
-  setMovFlags(movFlag): FFmpegCommandBuilder {
+  setMovFlags(movFlag: string): FFmpegCommandBuilder {
     this.commandGeneraterOptions.outputCommandOptions['movflags'] = movFlag;
     return this;
   }
 
-  setupSelectCaptureThumbnail(chooseFrameNumber = 100): FFmpegCommandBuilder {
-    this.commandGeneraterOptions.videoFilters.push('thumbnail=' + chooseFrameNumber.toString());
+  setupSelectCaptureThumbnail(chooseFrameNumber: number = 100): FFmpegCommandBuilder {
+    this.commandGeneraterOptions.videoFilters['thumbnail'] = chooseFrameNumber.toString();
     return this.setupCaptureThumbnail();
   }
 
@@ -165,7 +154,7 @@ export default class FFmpegCommandBuilder extends CommandBuilder {
   }
 
   // [Reference] Example of command when transmitting Gif image:ffmpeg -i 500156_loop.gif -movflags faststart -auto-alt-ref 0 -c:v libvpx -b:v 4M -crf 4 -pix_fmt rgba -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" 500156_loop2.webm
-  alphaRendering(codec = 'libvpx', pixelFormat = 'rgba'): FFmpegCommandBuilder {
+  alphaRendering(codec: string = 'libvpx', pixelFormat: string = 'rgba'): FFmpegCommandBuilder {
     this.commandGeneraterOptions.outputCommandOptions['auto-alt-ref'] = '0';
     this.outputVideoCodec(codec);
     this.outputPixelFormat(pixelFormat);
@@ -174,77 +163,87 @@ export default class FFmpegCommandBuilder extends CommandBuilder {
 
   // Setting the quality of the video
   // You can set 0 to 51 in the range.If you set the smaller value, the higher image quality will be, but the file size will be increased accordingly.
-  renderingQuality(quality): FFmpegCommandBuilder {
-    this.commandGeneraterOptions.outputCommandOptions['crf'] = quality;
+  renderingQuality(quality: number): FFmpegCommandBuilder {
+    this.commandGeneraterOptions.outputCommandOptions['crf'] = quality.toString();
     return this;
   }
 
-  inputStartSeeking(startTime): FFmpegCommandBuilder {
+  inputStartSeeking(startTime: number): FFmpegCommandBuilder {
     this.commandGeneraterOptions.inputCommandOptions['ss'] = startTime.toString();
     return this;
   }
 
-  outputStartSeeking(startTime): FFmpegCommandBuilder {
+  outputStartSeeking(startTime: number): FFmpegCommandBuilder {
     this.commandGeneraterOptions.outputCommandOptions['ss'] = startTime.toString();
     return this;
   }
 
-  seekTo(toTime): FFmpegCommandBuilder {
+  seekTo(toTime: number): FFmpegCommandBuilder {
     this.commandGeneraterOptions.outputCommandOptions['t'] = toTime.toString();
     return this;
   }
 
   // Can set preset name is [ultrafast, superfast, veryfast, faster, fast, medium, slow, slower, veryslow, placebo]
-  setPreset(presetName): FFmpegCommandBuilder {
+  setPreset(presetName: string): FFmpegCommandBuilder {
     this.commandGeneraterOptions.outputCommandOptions['preset'] = presetName.toString();
     return this;
   }
 
   // Can set tune name is [film, animation, grain, stillimage, fastdecode, zerolatency]
-  setTune(tuneName): FFmpegCommandBuilder {
+  setTune(tuneName: string): FFmpegCommandBuilder {
     this.commandGeneraterOptions.outputCommandOptions['tune'] = tuneName.toString();
     return this;
   }
 
-  renderSubtitleFromAss(assfilePath): FFmpegCommandBuilder {
-    this.commandGeneraterOptions.videoFilters.push('ass=' + assfilePath);
+  renderSubtitleFromAss(assfilePath: string): FFmpegCommandBuilder {
+    this.commandGeneraterOptions.videoFilters['ass'] = assfilePath;
     return this;
   }
 
-  renderSubtitleFromSrt(srtfilePath): FFmpegCommandBuilder {
-    this.commandGeneraterOptions.videoFilters.push('subtitles=' + srtfilePath);
+  renderSubtitleFromSrt(srtfilePath: string): FFmpegCommandBuilder {
+    this.commandGeneraterOptions.videoFilters['subtitles'] = srtfilePath;
     return this;
   }
 
   build(): string {
-    var commands = [this.commandGeneraterOptions.ffmpegBaseCommandPath + 'ffmpeg'];
+    const commands = [this.commandGeneraterOptions.ffmpegBaseCommandPath + 'ffmpeg'];
     var inputKeys = Object.keys(this.commandGeneraterOptions.inputCommandOptions);
-    for (var i = 0; i < inputKeys.length; ++i) {
-      commands.push('-' + inputKeys[i]);
-      commands.push(this.commandGeneraterOptions.inputCommandOptions[inputKeys[i]]);
+    for (const inputKey of Object.keys(this.commandGeneraterOptions.inputCommandOptions)) {
+      commands.push('-' + inputKey);
+      commands.push(this.commandGeneraterOptions.inputCommandOptions[inputKey]);
     }
 
-    for (var i = 0; i < this.commandGeneraterOptions.inputFilePathes.length; ++i) {
+    for (const inputFilePath of this.commandGeneraterOptions.inputFilePathes) {
       commands.push('-i');
-      commands.push(this.commandGeneraterOptions.inputFilePathes[i]);
+      commands.push(inputFilePath);
     }
 
-    var outputKeys = Object.keys(this.commandGeneraterOptions.outputCommandOptions);
-    for (var i = 0; i < outputKeys.length; ++i) {
-      commands.push('-' + outputKeys[i]);
-      commands.push(this.commandGeneraterOptions.outputCommandOptions[outputKeys[i]]);
+    for (const outputKey of Object.keys(this.commandGeneraterOptions.outputCommandOptions)) {
+      commands.push('-' + outputKey);
+      if (
+        !this.commandGeneraterOptions.outputCommandOptions[outputKey] ||
+        this.commandGeneraterOptions.outputCommandOptions[outputKey].length <= 0
+      ) {
+        continue;
+      }
+      commands.push(this.commandGeneraterOptions.outputCommandOptions[outputKey]);
     }
-    if (this.commandGeneraterOptions.videoFilters.length > 0) {
+    if (Object.keys(this.commandGeneraterOptions.videoFilters).length > 0) {
       commands.push('-vf');
-      commands.push(['"', this.commandGeneraterOptions.videoFilters.join(','), '"'].join(''));
+      const flters = [];
+      for (const videoFilterKey of Object.keys(this.commandGeneraterOptions.videoFilters)) {
+        flters.push([videoFilterKey, this.commandGeneraterOptions.videoFilters[videoFilterKey]].join('='));
+      }
+      commands.push(['"', flters.join(','), '"'].join(''));
     }
-    for (var i = 0; i < this.commandGeneraterOptions.mapCommands.length; ++i) {
+    for (const mapCommand of this.commandGeneraterOptions.mapCommands) {
       commands.push('-map');
-      commands.push(this.commandGeneraterOptions.mapCommands[i]);
+      commands.push(mapCommand);
     }
     if (this.commandGeneraterOptions.outputFilePath != null && this.commandGeneraterOptions.outputFilePath.length > 0) {
       commands.push(this.commandGeneraterOptions.outputFilePath);
     }
+
     return commands.join(' ');
   }
 }
