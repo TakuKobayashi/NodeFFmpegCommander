@@ -26,11 +26,6 @@ export default class FFmpegCommandBuilder extends CommandBuilder {
     return this;
   }
 
-  baseInput(inputPath): FFmpegCommandBuilder {
-    this.commandGeneraterOptions.inputFilePathes = [inputPath];
-    return this;
-  }
-
   output(outputPath): FFmpegCommandBuilder {
     this.commandGeneraterOptions.outputFilePath = outputPath;
     return this;

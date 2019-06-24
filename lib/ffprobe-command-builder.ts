@@ -7,11 +7,6 @@ export default class FFprobeCommandBuilder extends CommandBuilder {
     this.commandGeneraterOptions.outputCommandOptions['print_format'] = 'json';
   }
 
-  baseInput(inputPath): FFprobeCommandBuilder {
-    this.commandGeneraterOptions.inputFilePathes = [inputPath];
-    return this;
-  }
-
   build(): string {
     const commands = [this.commandGeneraterOptions.ffmpegBaseCommandPath + 'ffprobe'];
 

@@ -9,7 +9,10 @@ export default abstract class CommandBuilder {
 
   abstract build(): string;
 
-  abstract baseInput(inputPath: string);
+  baseInput(inputPath: string){
+    this.commandGeneraterOptions.inputFilePathes = [inputPath];
+    return this;
+  }
 
   clear(): void {
     this.commandGeneraterOptions = {
