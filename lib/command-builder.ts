@@ -1,4 +1,4 @@
-import {CommandGeneraterOptions} from './interfaces/command-generater-options'
+import { CommandGeneraterOptions } from './interfaces/command-generater-options';
 
 export default abstract class CommandBuilder {
   protected commandGeneraterOptions: CommandGeneraterOptions;
@@ -6,7 +6,6 @@ export default abstract class CommandBuilder {
   constructor() {
     this.clear();
   }
-
 
   ffmpegRootPath(path: string) {
     if (path.length <= 0) {
@@ -21,7 +20,7 @@ export default abstract class CommandBuilder {
 
   abstract build(): string;
 
-  baseInput(inputPath: string){
+  baseInput(inputPath: string) {
     this.commandGeneraterOptions.inputFilePathes = [inputPath];
     return this;
   }
@@ -31,7 +30,7 @@ export default abstract class CommandBuilder {
       outputCommandOptions: {
         loglevel: 'warning',
       },
-      ffmpegBaseCommandPath: "",
+      ffmpegBaseCommandPath: '',
       inputFilePathes: [],
       outputFilePath: '',
       inputCommandOptions: {},

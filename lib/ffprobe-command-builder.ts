@@ -10,14 +10,17 @@ export default class FFprobeCommandBuilder extends CommandBuilder {
   build(): string {
     const commands = [this.commandGeneraterOptions.ffmpegBaseCommandPath + 'ffprobe'];
 
-    for(const inputPath of this.commandGeneraterOptions.inputFilePathes){
+    for (const inputPath of this.commandGeneraterOptions.inputFilePathes) {
       commands.push('-i');
       commands.push(inputPath);
     }
 
-    for(const outputKey of Object.keys(this.commandGeneraterOptions.outputCommandOptions)){
+    for (const outputKey of Object.keys(this.commandGeneraterOptions.outputCommandOptions)) {
       commands.push('-' + outputKey);
-      if(!this.commandGeneraterOptions.outputCommandOptions[outputKey] || this.commandGeneraterOptions.outputCommandOptions[outputKey].length <= 0){
+      if (
+        !this.commandGeneraterOptions.outputCommandOptions[outputKey] ||
+        this.commandGeneraterOptions.outputCommandOptions[outputKey].length <= 0
+      ) {
         continue;
       }
       commands.push(this.commandGeneraterOptions.outputCommandOptions[outputKey]);

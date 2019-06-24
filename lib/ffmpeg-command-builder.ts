@@ -6,12 +6,12 @@ export default class FFmpegCommandBuilder extends CommandBuilder {
   }
 
   updateInputCommandOptions(options = {}): FFmpegCommandBuilder {
-    this.commandGeneraterOptions.inputCommandOptions = {...this.commandGeneraterOptions.inputCommandOptions, ...options};
+    this.commandGeneraterOptions.inputCommandOptions = { ...this.commandGeneraterOptions.inputCommandOptions, ...options };
     return this;
   }
 
   updateOutputCommandOptions(options = {}): FFmpegCommandBuilder {
-    this.commandGeneraterOptions.outputCommandOptions = {...this.commandGeneraterOptions.outputCommandOptions, ...options};
+    this.commandGeneraterOptions.outputCommandOptions = { ...this.commandGeneraterOptions.outputCommandOptions, ...options };
     return this;
   }
 
@@ -53,7 +53,9 @@ export default class FFmpegCommandBuilder extends CommandBuilder {
       if (insertNumber - 1 <= 0) {
         prevOverlay = '[0:v]';
       }
-      this.commandGeneraterOptions.streamArgCommands.push('[' + insertNumber.toString() + ':v]setpts=PTS+' + overlayOption.start.toString() + '/TB' + tmpPrefix);
+      this.commandGeneraterOptions.streamArgCommands.push(
+        '[' + insertNumber.toString() + ':v]setpts=PTS+' + overlayOption.start.toString() + '/TB' + tmpPrefix,
+      );
       this.commandGeneraterOptions.streamArgCommands.push(
         prevOverlay +
           tmpPrefix +
@@ -69,7 +71,11 @@ export default class FFmpegCommandBuilder extends CommandBuilder {
     } else {
       this.commandGeneraterOptions.streamArgCommands.push(overlayOption);
     }
-    this.commandGeneraterOptions.outputCommandOptions['filter_complex'] = ['"', this.commandGeneraterOptions.streamArgCommands.join(';'), '"'].join();
+    this.commandGeneraterOptions.outputCommandOptions['filter_complex'] = [
+      '"',
+      this.commandGeneraterOptions.streamArgCommands.join(';'),
+      '"',
+    ].join();
     return this;
   }
 
