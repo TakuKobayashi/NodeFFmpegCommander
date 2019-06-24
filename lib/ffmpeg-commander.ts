@@ -1,13 +1,13 @@
 import { VideoSize } from './interfaces/video-size';
 import { FFprobOutput, MediaMetaData } from './interfaces/ffprob-output-fromat';
 import FFmpegCommandBuilder from './ffmpeg-command-builder';
-import FFprobCommandBuilder from './ffprob-command-builder';
+import FfprobeCommandBuilder from './ffprobe-command-builder';
 
 const child_process = require('child_process');
 
 export default class FFMpegCommander {
   static getMetaInfo(videoFilePath: string): FFprobOutput {
-    const ffprobCommandBuilder = new FFprobCommandBuilder();
+    const ffprobCommandBuilder = new FfprobeCommandBuilder();
     const result = this.runSync(ffprobCommandBuilder.baseInput(videoFilePath).build());
     return JSON.parse(result) as FFprobOutput;
   }

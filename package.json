@@ -7,7 +7,7 @@
     "build": "tsc -p tsconfig.json",
     "format": "prettier --config .prettierrc --write '**/*.{ts,js}'",
     "docs": "typedoc --out docs/",
-    "test": "jest"
+    "jest": "jest -c jest.config.js"
   },
   "repository": {
     "type": "git",

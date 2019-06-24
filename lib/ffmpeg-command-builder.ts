@@ -260,7 +260,7 @@ export default class FFMpegCommandBuilder extends CommandBuilder {
     return this;
   }
 
-  build(options = {}): string {
+  build(): string {
     var commands = [this.ffmpegBaseCommandPath + 'ffmpeg'];
     var inputKeys = Object.keys(this.inputCommandOptions);
     for (var i = 0; i < inputKeys.length; ++i) {
