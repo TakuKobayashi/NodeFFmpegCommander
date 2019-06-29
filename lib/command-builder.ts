@@ -36,7 +36,7 @@ export default abstract class CommandBuilder {
       inputCommandOptions: {},
       streamArgCommands: [],
       mapCommands: [],
-      videoFilters: [],
+      videoFilters: {},
     };
   }
 }
