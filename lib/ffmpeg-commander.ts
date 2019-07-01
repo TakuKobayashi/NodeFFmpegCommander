@@ -107,14 +107,14 @@ export default class FFmpegCommander {
     return [hms.join(':'), minutes].join(',');
   }
 
-  static covertTelopFile(inputFilePath: string, outputFilePath: string): string {
+  static covertFile(inputFilePath: string, outputFilePath: string): string {
     const ffmpegCommandBuilder = new FFmpegCommandBuilder();
     ffmpegCommandBuilder.baseInput(inputFilePath);
     ffmpegCommandBuilder.output(outputFilePath);
     return this.runSync(ffmpegCommandBuilder.build());
   }
 
-  static asyncCovertTelopFile(inputFilePath: string, outputFilePath: string): Promise<string> {
+  static asyncCovertFile(inputFilePath: string, outputFilePath: string): Promise<string> {
     const ffmpegCommandBuilder = new FFmpegCommandBuilder();
     ffmpegCommandBuilder.baseInput(inputFilePath);
     ffmpegCommandBuilder.output(outputFilePath);
