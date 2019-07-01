@@ -1,8 +1,8 @@
-import { VideoSize } from './interfaces/video-size';
-import { FFprobOutput, MediaMetaData } from './interfaces/ffprob-output-fromat';
+import { VideoSize, TelopElement, FFprobOutput } from './interfaces';
 import FFmpegCommandBuilder from './ffmpeg-command-builder';
 import FfprobeCommandBuilder from './ffprobe-command-builder';
 
+const fs = require('fs');
 const child_process = require('child_process');
 
 export default class FFmpegCommander {
@@ -12,9 +12,14 @@ export default class FFmpegCommander {
     return JSON.parse(result) as FFprobOutput;
   }
 
-  static getVideoSize(videoFilePath: string): VideoSize {
-    const jsonObject = this.getMetaInfo(videoFilePath);
-    const videoInfo = jsonObject.streams.find(function(element) {
+  static async asyncGetMetaInfo(videoFilePath: string): Promise<FFprobOutput> {
+    const ffprobCommandBuilder = new FfprobeCommandBuilder();
+    const result = await this.run(ffprobCommandBuilder.baseInput(videoFilePath).build());
+    return JSON.parse(result) as FFprobOutput;
+  }
+
+  private static convertVideoSize(fprobOutput: FFprobOutput): VideoSize {
+    const videoInfo = fprobOutput.streams.find(function(element) {
       return element.width && element.height;
     });
     const videoSize: VideoSize = {
@@ -37,11 +42,83 @@ export default class FFmpegCommander {
     return videoSize;
   }
 
-  static captureThumbnail(videoFilePath: string, frameNumber: number = 1): string {
+  static getVideoSize(videoFilePath: string): VideoSize {
+    const fprobOutput = this.getMetaInfo(videoFilePath);
+    return this.convertVideoSize(fprobOutput);
+  }
+
+  static async asyncGetVideoSize(videoFilePath: string): Promise<VideoSize> {
+    const fprobOutput = await this.asyncGetMetaInfo(videoFilePath);
+    return this.convertVideoSize(fprobOutput);
+  }
+
+  static captureThumbnail(videoFilePath: string, outputImageFilePath: string, frameNumber: number = 2): string {
     const ffmpegCommandBuilder = new FFmpegCommandBuilder();
     ffmpegCommandBuilder.baseInput(videoFilePath);
+    ffmpegCommandBuilder.output(outputImageFilePath);
     ffmpegCommandBuilder.setupSelectCaptureThumbnail(frameNumber);
-    return this.runSync(ffmpegCommandBuilder.baseInput(videoFilePath).build());
+    return this.runSync(ffmpegCommandBuilder.build());
+  }
+
+  static async asyncCaptureThumbnail(videoFilePath: string, outputImageFilePath: string, frameNumber: number = 2): Promise<string> {
+    const ffmpegCommandBuilder = new FFmpegCommandBuilder();
+    ffmpegCommandBuilder.baseInput(videoFilePath);
+    ffmpegCommandBuilder.output(outputImageFilePath);
+    ffmpegCommandBuilder.setupSelectCaptureThumbnail(frameNumber);
+    return this.run(ffmpegCommandBuilder.build());
+  }
+
+  static createTelopSrtFile(outputFilePath: string, ...telopElements: TelopElement[]): void {
+    const resultTelopSrtStrings = [];
+    for (let i = 0; i < telopElements.length; ++i) {
+      const telopElement = telopElements[i];
+      const srtStrings = [];
+      srtStrings.push(i.toString());
+      srtStrings.push(
+        [this.convertFFmpegTime(telopElement.startMilliSecond), this.convertFFmpegTime(telopElement.endMilliSecond)].join(' --> '),
+      );
+      srtStrings.push(telopElement.word);
+      resultTelopSrtStrings.push(srtStrings.join('\n'));
+    }
+    fs.writeFileSync(outputFilePath, resultTelopSrtStrings.join('\n\n'));
+  }
+
+  private static convertFFmpegTime(millisocond: number): string {
+    const milli = millisocond % 1000;
+    const seconds = Math.max((millisocond - milli) % 60000, 0);
+    const minutes = Math.max((millisocond - seconds * 60000 - milli) % 3600000, 0);
+    const hours = Math.max(millisocond - minutes * 3600000 - seconds * 60000 - milli, 0);
+    const hms = [];
+    if (hours.toString().length < 2) {
+      hms.push(['0', hours.toString()].join(''));
+    } else {
+      hms.push(hours.toString());
+    }
+    if (minutes.toString().length < 2) {
+      hms.push(['0', minutes.toString()].join(''));
+    } else {
+      hms.push(minutes.toString());
+    }
+    if (seconds.toString().length < 2) {
+      hms.push(['0', seconds.toString()].join(''));
+    } else {
+      hms.push(seconds.toString());
+    }
+    return [hms.join(':'), minutes].join(',');
+  }
+
+  static covertTelopFile(inputFilePath: string, outputFilePath: string): string {
+    const ffmpegCommandBuilder = new FFmpegCommandBuilder();
+    ffmpegCommandBuilder.baseInput(inputFilePath);
+    ffmpegCommandBuilder.output(outputFilePath);
+    return this.runSync(ffmpegCommandBuilder.build());
+  }
+
+  static asyncCovertTelopFile(inputFilePath: string, outputFilePath: string): Promise<string> {
+    const ffmpegCommandBuilder = new FFmpegCommandBuilder();
+    ffmpegCommandBuilder.baseInput(inputFilePath);
+    ffmpegCommandBuilder.output(outputFilePath);
+    return this.run(ffmpegCommandBuilder.build());
   }
 
   static async run(command: string): Promise<string> {

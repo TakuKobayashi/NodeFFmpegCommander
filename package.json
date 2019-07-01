@@ -41,5 +41,9 @@
     "dist"
   ],
   "homepage": "https://github.com/TakuKobayashi/NodeFFmpegCommander#readme",
-  "types": "dist/index.d.ts"
+  "types": "dist/index.d.ts",
+  "dependencies": {
+    "child_process": "^1.0.2",
+    "fs": "^0.0.1-security"
+  }
 }
