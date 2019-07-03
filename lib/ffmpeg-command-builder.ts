@@ -3,6 +3,8 @@ import CommandBuilder from './command-builder';
 export default class FFmpegCommandBuilder extends CommandBuilder {
   constructor() {
     super();
+    // overwrite option
+    this.commandGeneraterOptions.outputCommandOptions['y'] = '';
   }
 
   updateInputCommandOptions(options: { [s: string]: string }): FFmpegCommandBuilder {
@@ -245,5 +247,11 @@ export default class FFmpegCommandBuilder extends CommandBuilder {
     }
 
     return commands.join(' ');
+  }
+
+  clear() {
+    super.clear();
+    // overwrite option
+    this.commandGeneraterOptions.outputCommandOptions['y'] = '';
   }
 }

@@ -85,9 +85,9 @@ export default class FFmpegCommander {
 
   private static convertFFmpegTime(millisocond: number): string {
     const milli = millisocond % 1000;
-    const seconds = Math.max((millisocond - milli) % 60000, 0);
-    const minutes = Math.max((millisocond - seconds * 60000 - milli) % 3600000, 0);
-    const hours = Math.max(millisocond - minutes * 3600000 - seconds * 60000 - milli, 0);
+    const seconds = Math.max(((millisocond - milli) / 1000) % 60, 0);
+    const minutes = Math.max(((millisocond - seconds * 60000 - milli) / 60000) % 60, 0);
+    const hours = Math.max((millisocond - minutes * 3600000 - seconds * 60000 - milli) / 3600000, 0);
     const hms = [];
     if (hours.toString().length < 2) {
       hms.push(['0', hours.toString()].join(''));
@@ -104,7 +104,15 @@ export default class FFmpegCommander {
     } else {
       hms.push(seconds.toString());
     }
-    return [hms.join(':'), minutes].join(',');
+    let milliString = '';
+    if (milli.toString().length < 2) {
+      milliString = ['00', milli.toString()].join('');
+    } else if (milli.toString().length < 3) {
+      milliString = ['0', milli.toString()].join('');
+    } else {
+      milliString = milli.toString();
+    }
+    return [hms.join(':'), milliString].join(',');
   }
 
   static covertFile(inputFilePath: string, outputFilePath: string): string {
