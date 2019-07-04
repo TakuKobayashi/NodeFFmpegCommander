@@ -122,7 +122,7 @@ export default class FFmpegCommander {
     return this.runSync(ffmpegCommandBuilder.build());
   }
 
-  static asyncCovertFile(inputFilePath: string, outputFilePath: string): Promise<string> {
+  static async asyncCovertFile(inputFilePath: string, outputFilePath: string): Promise<string> {
     const ffmpegCommandBuilder = new FFmpegCommandBuilder();
     ffmpegCommandBuilder.baseInput(inputFilePath);
     ffmpegCommandBuilder.output(outputFilePath);
