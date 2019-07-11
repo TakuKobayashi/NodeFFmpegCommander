@@ -1,4 +1,5 @@
 import CommandBuilder from './command-builder';
+const path = require('path');
 
 export default class FFmpegCommandBuilder extends CommandBuilder {
   constructor() {
@@ -18,7 +19,7 @@ export default class FFmpegCommandBuilder extends CommandBuilder {
   }
 
   output(outputPath: string): FFmpegCommandBuilder {
-    this.commandGeneraterOptions.outputFilePath = outputPath;
+    this.commandGeneraterOptions.outputFilePath = path.resolve(outputPath);
     return this;
   }
 
@@ -26,7 +27,7 @@ export default class FFmpegCommandBuilder extends CommandBuilder {
   concat(concatPathes: string | string[], enableVideo = true, enableAudio = true): FFmpegCommandBuilder {
     const videoFiles: string[] = Array.prototype.concat.apply([], [concatPathes]);
     for (const videoFile of videoFiles) {
-      this.commandGeneraterOptions.inputFilePathes.push(videoFile);
+      this.commandGeneraterOptions.inputFilePathes.push(path.resolve(videoFile));
     }
     const concatFilterComplexes = [['concat', 'n', this.commandGeneraterOptions.inputFilePathes.length].join('=')];
     if (enableVideo) {
@@ -46,7 +47,7 @@ export default class FFmpegCommandBuilder extends CommandBuilder {
   // To composite the base movie overlay movies or images.(there are various commands)
   // If do not adjust PTS to the starting point of the movie, it seems to be the wrong starting point when composed the movie.
   overlay(overlayPath: string, startTime: string | number, endTime: string | number): FFmpegCommandBuilder {
-    this.commandGeneraterOptions.inputFilePathes.push(overlayPath);
+    this.commandGeneraterOptions.inputFilePathes.push(path.resolve(overlayPath));
     const insertNumber = this.commandGeneraterOptions.inputFilePathes.length - 1;
     const tmpPrefix = '[pts' + insertNumber.toString() + ']';
     const tmpOverlay = '[overlayout' + insertNumber.toString() + ']';
@@ -198,18 +199,22 @@ export default class FFmpegCommandBuilder extends CommandBuilder {
   }
 
   renderSubtitleFromAss(assfilePath: string): FFmpegCommandBuilder {
-    this.commandGeneraterOptions.videoFilters['ass'] = assfilePath;
+    this.commandGeneraterOptions.videoFilters['ass'] = path.resolve(assfilePath);
     return this;
   }
 
   renderSubtitleFromSrt(srtfilePath: string): FFmpegCommandBuilder {
-    this.commandGeneraterOptions.videoFilters['subtitles'] = srtfilePath;
+    this.commandGeneraterOptions.videoFilters['subtitles'] = path.resolve(srtfilePath);
     return this;
   }
 
   build(): string {
-    const commands = [this.commandGeneraterOptions.ffmpegBaseCommandPath + 'ffmpeg'];
-    var inputKeys = Object.keys(this.commandGeneraterOptions.inputCommandOptions);
+    const commands = [];
+    if(this.commandGeneraterOptions.ffmpegBaseCommandPath && this.commandGeneraterOptions.ffmpegBaseCommandPath.length > 0){
+      commands.push(path.join(path.resolve(this.commandGeneraterOptions.ffmpegBaseCommandPath), 'ffmpeg'));
+    }else{
+      commands.push('ffmpeg');
+    }
     for (const inputKey of Object.keys(this.commandGeneraterOptions.inputCommandOptions)) {
       commands.push('-' + inputKey);
       commands.push(this.commandGeneraterOptions.inputCommandOptions[inputKey]);

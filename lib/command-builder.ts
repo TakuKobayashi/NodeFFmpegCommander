@@ -1,4 +1,5 @@
 import { CommandGeneraterOptions } from './interfaces/command-generater-options';
+const path = require('path');
 
 export default abstract class CommandBuilder {
   protected commandGeneraterOptions: CommandGeneraterOptions;
@@ -7,21 +8,15 @@ export default abstract class CommandBuilder {
     this.clear();
   }
 
-  ffmpegRootPath(path: string) {
-    if (path.length <= 0) {
-      return;
-    } else if (path[path.length - 1] == '/') {
-      this.commandGeneraterOptions.ffmpegBaseCommandPath = path;
-    } else {
-      this.commandGeneraterOptions.ffmpegBaseCommandPath = path + '/';
-    }
+  ffmpegRootPath(rootPath: string) {
+    this.commandGeneraterOptions.ffmpegBaseCommandPath = path.resolve(rootPath);
     return this;
   }
 
   abstract build(): string;
 
   baseInput(inputPath: string) {
-    this.commandGeneraterOptions.inputFilePathes = [inputPath];
+    this.commandGeneraterOptions.inputFilePathes = [path.resolve(inputPath)];
     return this;
   }
 
