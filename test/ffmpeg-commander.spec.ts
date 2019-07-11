@@ -47,28 +47,46 @@ describe('FFmpegCommander', () => {
 
   describe('captureThumbnail', () => {
     describe('png', () => {
+      let exportFilePath: string;
+
+      beforeEach(() => {
+        exportFilePath = path.join(
+          outputDirectoryPath,
+          Math.random()
+            .toString(36)
+            .slice(-8) + '.png',
+        );
+      })
+
       it('captureThumbnail', () => {
-        const exportFilePath = path.join(outputDirectoryPath, 'PNGthumbnail1.png');
         FFmpegCommander.captureThumbnail(sampleVideoFilePath, exportFilePath);
         expect(fs.existsSync(exportFilePath)).toBeTruthy();
       });
 
       it('asyncCaptureThumbnail', async () => {
-        const exportFilePath = path.join(outputDirectoryPath, 'asyncPNGThumbnail2.png');
         await FFmpegCommander.asyncCaptureThumbnail(sampleVideoFilePath, exportFilePath);
         expect(fs.existsSync(exportFilePath)).toBeTruthy();
       });
     });
 
     describe('jpg', () => {
+      let exportFilePath: string;
+
+      beforeEach(() => {
+        exportFilePath = path.join(
+          outputDirectoryPath,
+          Math.random()
+            .toString(36)
+            .slice(-8) + '.jpg',
+        );
+      })
+
       it('captureThumbnail', () => {
-        const exportFilePath = path.join(outputDirectoryPath, 'JPGthumbnail1.jpg');
         FFmpegCommander.captureThumbnail(sampleVideoFilePath, exportFilePath);
         expect(fs.existsSync(exportFilePath)).toBeTruthy();
       });
 
       it('asyncCaptureTumbnail', async () => {
-        const exportFilePath = path.join(outputDirectoryPath, 'asyncJPGThumbnail2.jpg');
         await FFmpegCommander.asyncCaptureThumbnail(sampleVideoFilePath, exportFilePath);
         expect(fs.existsSync(exportFilePath)).toBeTruthy();
       });
@@ -76,7 +94,12 @@ describe('FFmpegCommander', () => {
   });
 
   it('createTelopSrtFile', () => {
-    const exportFilePath = path.join(outputDirectoryPath, 'telop.srt');
+    const exportFilePath = path.join(
+      outputDirectoryPath,
+      Math.random()
+        .toString(36)
+        .slice(-8) + '.srt',
+    );
     const terop1 = {
       startMilliSecond: 1000,
       endMilliSecond: 2000,
@@ -99,25 +122,45 @@ describe('FFmpegCommander', () => {
 
   describe('covertFile', () => {
     it('mp4 to wav', () => {
-      const exportFilePath = path.join(outputDirectoryPath, 'exportSound.wav');
+      const exportFilePath = path.join(
+        outputDirectoryPath,
+        Math.random()
+          .toString(36)
+          .slice(-8) + '.wav',
+      );
       FFmpegCommander.covertFile(sampleVideoFilePath, exportFilePath);
       expect(fs.existsSync(exportFilePath)).toBeTruthy();
     });
 
     it('mp4 to mov', () => {
-      const exportFilePath = path.join(outputDirectoryPath, 'convertEncode.mov');
+      const exportFilePath = path.join(
+        outputDirectoryPath,
+        Math.random()
+          .toString(36)
+          .slice(-8) + '.mov',
+      );
       FFmpegCommander.covertFile(sampleVideoFilePath, exportFilePath);
       expect(fs.existsSync(exportFilePath)).toBeTruthy();
     });
 
     it('mp4 to gif', () => {
-      const exportFilePath = path.join(outputDirectoryPath, 'convertAnimationGif.gif');
+      const exportFilePath = path.join(
+        outputDirectoryPath,
+        Math.random()
+          .toString(36)
+          .slice(-8) + '.gif',
+      );
       FFmpegCommander.covertFile(sampleVideoFilePath, exportFilePath);
       expect(fs.existsSync(exportFilePath)).toBeTruthy();
     });
 
     it('srt to ass', () => {
-      const convertBaseFilePath = path.join(outputDirectoryPath, 'convertBase.srt');
+      const convertBaseFilePath = path.join(
+        outputDirectoryPath,
+        Math.random()
+          .toString(36)
+          .slice(-8) + '.srt',
+      );
       const terop1 = {
         startMilliSecond: 1000,
         endMilliSecond: 2000,
@@ -130,7 +173,12 @@ describe('FFmpegCommander', () => {
       };
       FFmpegCommander.createTelopSrtFile(convertBaseFilePath, terop1, terop2);
 
-      const exportFilePath = path.join(outputDirectoryPath, 'convertBase.ass');
+      const exportFilePath = path.join(
+        outputDirectoryPath,
+        Math.random()
+          .toString(36)
+          .slice(-8) + '.ass',
+      );
       FFmpegCommander.covertFile(convertBaseFilePath, exportFilePath);
       expect(fs.existsSync(exportFilePath)).toBeTruthy();
     });
@@ -138,25 +186,45 @@ describe('FFmpegCommander', () => {
 
   describe('asyncCovertFile', () => {
     it('mp4 to wav', async () => {
-      const exportFilePath = path.join(outputDirectoryPath, 'asyncExportSound.wav');
+      const exportFilePath = path.join(
+        outputDirectoryPath,
+        Math.random()
+          .toString(36)
+          .slice(-8) + '.wav',
+      );
       await FFmpegCommander.asyncCovertFile(sampleVideoFilePath, exportFilePath);
       expect(fs.existsSync(exportFilePath)).toBeTruthy();
     });
 
     it('mp4 to mov', async () => {
-      const exportFilePath = path.join(outputDirectoryPath, 'asyncConvertEncode.mov');
+      const exportFilePath = path.join(
+        outputDirectoryPath,
+        Math.random()
+          .toString(36)
+          .slice(-8) + '.mov',
+      );
       await FFmpegCommander.asyncCovertFile(sampleVideoFilePath, exportFilePath);
       expect(fs.existsSync(exportFilePath)).toBeTruthy();
     });
 
     it('mp4 to gif', async () => {
-      const exportFilePath = path.join(outputDirectoryPath, 'asyncConvertAnimationGif.gif');
+      const exportFilePath = path.join(
+        outputDirectoryPath,
+        Math.random()
+          .toString(36)
+          .slice(-8) + '.gif',
+      );
       await FFmpegCommander.asyncCovertFile(sampleVideoFilePath, exportFilePath);
       expect(fs.existsSync(exportFilePath)).toBeTruthy();
     });
 
     it('srt to ass', async () => {
-      const convertBaseFilePath = path.join(outputDirectoryPath, 'asyncConvertBase.srt');
+      const convertBaseFilePath = path.join(
+        outputDirectoryPath,
+        Math.random()
+          .toString(36)
+          .slice(-8) + '.srt',
+      );
       const terop1 = {
         startMilliSecond: 1000,
         endMilliSecond: 2000,
@@ -169,7 +237,12 @@ describe('FFmpegCommander', () => {
       };
       FFmpegCommander.createTelopSrtFile(convertBaseFilePath, terop1, terop2);
 
-      const exportFilePath = path.join(outputDirectoryPath, 'asyncConvertBase.ass');
+      const exportFilePath = path.join(
+        outputDirectoryPath,
+        Math.random()
+          .toString(36)
+          .slice(-8) + '.ass',
+      );
       await FFmpegCommander.asyncCovertFile(convertBaseFilePath, exportFilePath);
       expect(fs.existsSync(exportFilePath)).toBeTruthy();
     });

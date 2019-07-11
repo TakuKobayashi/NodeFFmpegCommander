@@ -157,15 +157,15 @@ describe('FFmpegCommandBuilder', () => {
     });
 
     it('scale', () => {
-      const command = ffmpegCommandBuilder.scale(1.4, 1.5).build();
-      expect(command).toBe('ffmpeg -i ' + sampleVideoFilePath + ' -loglevel warning -y -vf "scale=1.4:1.5" ' + exportFilePath);
+      const command = ffmpegCommandBuilder.scale(0.4, 0.5).build();
+      expect(command).toBe('ffmpeg -i ' + sampleVideoFilePath + ' -loglevel warning -y -vf "scale=0.4:0.5" ' + exportFilePath);
       FFmpegCommander.runSync(command);
       expect(fs.existsSync(exportFilePath)).toBeTruthy();
     });
 
     it('scaleCommand', () => {
-      const command = ffmpegCommandBuilder.scaleCommand('1.5:1.4').build();
-      expect(command).toBe('ffmpeg -i ' + sampleVideoFilePath + ' -loglevel warning -y -vf "scale=1.5:1.4" ' + exportFilePath);
+      const command = ffmpegCommandBuilder.scaleCommand('0.5:0.4').build();
+      expect(command).toBe('ffmpeg -i ' + sampleVideoFilePath + ' -loglevel warning -y -vf "scale=0.5:0.4" ' + exportFilePath);
       FFmpegCommander.runSync(command);
       expect(fs.existsSync(exportFilePath)).toBeTruthy();
     });
@@ -192,9 +192,9 @@ describe('FFmpegCommandBuilder', () => {
     });
 
     it('alphaRendering', () => {
-      const command = ffmpegCommandBuilder.alphaRendering('libvpx', 'rgba').build();
+      const command = ffmpegCommandBuilder.alphaRendering('h264', 'rgba').build();
       expect(command).toBe(
-        'ffmpeg -i ' + sampleVideoFilePath + ' -loglevel warning -y -auto-alt-ref 0 -vcodec libvpx -pix_fmt rgba ' + exportFilePath,
+        'ffmpeg -i ' + sampleVideoFilePath + ' -loglevel warning -y -auto-alt-ref 0 -vcodec h264 -pix_fmt rgba ' + exportFilePath,
       );
       FFmpegCommander.runSync(command);
       expect(fs.existsSync(exportFilePath)).toBeTruthy();
