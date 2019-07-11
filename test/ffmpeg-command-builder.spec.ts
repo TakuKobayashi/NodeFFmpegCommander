@@ -170,20 +170,6 @@ describe('FFmpegCommandBuilder', () => {
       expect(fs.existsSync(exportFilePath)).toBeTruthy();
     });
 
-    it('padding', () => {
-      const command = ffmpegCommandBuilder.padding(100, 200, 300, 400).build();
-      expect(command).toBe('ffmpeg -i ' + sampleVideoFilePath + ' -loglevel warning -y -vf "pad=300:400:100:200" ' + exportFilePath);
-      FFmpegCommander.runSync(command);
-      expect(fs.existsSync(exportFilePath)).toBeTruthy();
-    });
-
-    it('paddingCommand', () => {
-      const command = ffmpegCommandBuilder.paddingCommand('150:150:200:300').build();
-      expect(command).toBe('ffmpeg -i ' + sampleVideoFilePath + ' -loglevel warning -y -vf "pad=150:150:200:300" ' + exportFilePath);
-      FFmpegCommander.runSync(command);
-      expect(fs.existsSync(exportFilePath)).toBeTruthy();
-    });
-
     it('setMovFlags', () => {
       const command = ffmpegCommandBuilder.setMovFlags('faststart').build();
       expect(command).toBe('ffmpeg -i ' + sampleVideoFilePath + ' -loglevel warning -y -movflags faststart ' + exportFilePath);

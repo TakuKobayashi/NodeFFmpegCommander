@@ -121,16 +121,6 @@ export default class FFmpegCommandBuilder extends CommandBuilder {
     return this;
   }
 
-  padding(x: number, y: number, width: number, height: number): FFmpegCommandBuilder {
-    this.commandGeneraterOptions.videoFilters['pad'] = [width, height, x, y].join(':');
-    return this;
-  }
-
-  paddingCommand(paddingString: string): FFmpegCommandBuilder {
-    this.commandGeneraterOptions.videoFilters['pad'] = paddingString;
-    return this;
-  }
-
   setMovFlags(movFlag: string): FFmpegCommandBuilder {
     this.commandGeneraterOptions.outputCommandOptions['movflags'] = movFlag;
     return this;
