@@ -81,11 +81,6 @@ export default class FFmpegCommandBuilder extends CommandBuilder {
     return this;
   }
 
-  inputBitrate(bitrate: number): FFmpegCommandBuilder {
-    this.commandGeneraterOptions.inputCommandOptions['b'] = bitrate.toString();
-    return this;
-  }
-
   outputBitrate(bitrate: number): FFmpegCommandBuilder {
     this.commandGeneraterOptions.outputCommandOptions['b'] = bitrate.toString();
     return this;
@@ -98,11 +93,6 @@ export default class FFmpegCommandBuilder extends CommandBuilder {
 
   outputVideoCodec(vcodec: string): FFmpegCommandBuilder {
     this.commandGeneraterOptions.outputCommandOptions['vcodec'] = vcodec;
-    return this;
-  }
-
-  inputPixelFormat(pix_fmt: string): FFmpegCommandBuilder {
-    this.commandGeneraterOptions.inputCommandOptions['pix_fmt'] = pix_fmt;
     return this;
   }
 
@@ -210,9 +200,9 @@ export default class FFmpegCommandBuilder extends CommandBuilder {
 
   build(): string {
     const commands = [];
-    if(this.commandGeneraterOptions.ffmpegBaseCommandPath && this.commandGeneraterOptions.ffmpegBaseCommandPath.length > 0){
+    if (this.commandGeneraterOptions.ffmpegBaseCommandPath && this.commandGeneraterOptions.ffmpegBaseCommandPath.length > 0) {
       commands.push(path.join(path.resolve(this.commandGeneraterOptions.ffmpegBaseCommandPath), 'ffmpeg'));
-    }else{
+    } else {
       commands.push('ffmpeg');
     }
     for (const inputKey of Object.keys(this.commandGeneraterOptions.inputCommandOptions)) {

@@ -10,10 +10,10 @@ export default class FFprobeCommandBuilder extends CommandBuilder {
 
   build(): string {
     const commands = [];
-    if(this.commandGeneraterOptions.ffmpegBaseCommandPath && this.commandGeneraterOptions.ffmpegBaseCommandPath.length > 0){
-      commands.push(path.join(path.resolve(this.commandGeneraterOptions.ffmpegBaseCommandPath), 'ffprobe'))
-    }else{
-      commands.push('ffprobe')
+    if (this.commandGeneraterOptions.ffmpegBaseCommandPath && this.commandGeneraterOptions.ffmpegBaseCommandPath.length > 0) {
+      commands.push(path.join(path.resolve(this.commandGeneraterOptions.ffmpegBaseCommandPath), 'ffprobe'));
+    } else {
+      commands.push('ffprobe');
     }
 
     for (const inputPath of this.commandGeneraterOptions.inputFilePathes) {

@@ -67,7 +67,7 @@ describe('FFmpegCommander', () => {
         expect(fs.existsSync(exportFilePath)).toBeTruthy();
       });
 
-      it('asyncCaptureTumbnail',async () => {
+      it('asyncCaptureTumbnail', async () => {
         const exportFilePath = path.join(outputDirectoryPath, 'asyncJPGThumbnail2.jpg');
         await FFmpegCommander.asyncCaptureThumbnail(sampleVideoFilePath, exportFilePath);
         expect(fs.existsSync(exportFilePath)).toBeTruthy();
@@ -149,7 +149,7 @@ describe('FFmpegCommander', () => {
       expect(fs.existsSync(exportFilePath)).toBeTruthy();
     });
 
-    it('mp4 to gif', async() => {
+    it('mp4 to gif', async () => {
       const exportFilePath = path.join(outputDirectoryPath, 'asyncConvertAnimationGif.gif');
       await FFmpegCommander.asyncCovertFile(sampleVideoFilePath, exportFilePath);
       expect(fs.existsSync(exportFilePath)).toBeTruthy();
