@@ -1,7 +1,7 @@
 import FFmpegCommandBuilder from '../lib/ffmpeg-command-builder';
 import FFmpegCommander from '../lib/ffmpeg-commander';
 
-jest.setTimeout(30000);
+jest.setTimeout(60000);
 
 const path = require('path');
 const fs = require('fs');
